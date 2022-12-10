@@ -37,15 +37,38 @@ func sort(a []int) {
 	}
 	createMinHeap(a)
 	for i := len(a)-1; i > 0; i-- {
-		t := a[0]
-		a[0] = a[i]
-		a[i] = t
+		a[0], a[i] = a[i], a[0]
 		heapify(a[:i], 0)
 	}
 }
 
+func topN(a []int, n int) []int {
+	if n > len(a) {
+		n = len(a)
+	}
+	ret := make([]int, n)
+	copy(ret, a[:n])
+	if n == len(a) {
+		sort(ret)
+		return ret
+	}
+	createMinHeap(ret)
+	for i := n; i < len(a); i++ {
+		if ret[0] < a[i] {
+			ret[0] = a[i]
+			heapify(ret, 0)
+		}
+	}
+	for i := len(ret)-1; i > 0; i-- {
+		ret[0], ret[i] = ret[i], ret[0]
+		heapify(ret[:i], 0)
+	}
+	return ret
+}
+
 func main() {
 	a := []int{1, 2, 5, 3, 9, 4, 5, 6, 1}
+	fmt.Println(topN(a, 5))
 	sort(a)
 	fmt.Println(a)
 }
